@@ -5,21 +5,32 @@ Rhys Thomas
 ## Game.cs
 
 Good Aspects:
+ame Loop is Clear & Structured
+
+The Start() method runs the game very smooth using a while loop to continuously process any user input.
+Great introduction of a combat system.
 
 Improvements:
+Plenty of room to improve on the combat system in the near future adding other outcomes perhaps.
 
 ## Player.cs
 
 Good Aspects:
+Very well structured code, easy to understand.
+Encapsulaition (OOP) within the propterties of the Player class and functions such as PickUpItem()
 
 Improvements:
+Health should have a set maximum value just for game quality. Or else the player is invincible rendering the health system null.
 
 ## Room.cs
 
 Good Aspects:
+Good encapsulation on all the room properties within the file. Secure code that wont be tampered by any other methods.
+Room mechanics work great and as anticipated
 
 Improvements:
-
+Could add a compatible method for the player to check if there is nothing to be taken or fought within the room. Easy checking methods could be provided in the future.
+Otherwise perfectly functional.
 # Checklist:
 
 ## Pass standard:
