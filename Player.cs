@@ -8,7 +8,7 @@ public class Player
     public Room CurrentRoom { get; set; }
     public List<string> Inventory { get; set; } = new List<string>();
 
-    //Initialise the player attributes
+    //Initialise the player attributes.
     public Player(string name, int health, Room currentRoom)
     {
         Name = name;
@@ -16,11 +16,26 @@ public class Player
         CurrentRoom = currentRoom;
     }
 
+    //If the user picks up an item, passes the item through the function and adds it to the players inventory.
     public void PickUpItem(string item)
     {
         Console.WriteLine($"You picked up the {item}!");
         Inventory.Add(item);
     }
 
-    public string InventoryContents => Inventory.Count > 0 ? string.Join(", ", Inventory) : "Your inventory is empty.";
+    //Function to simply output the contents of the inventory whenever called. 
+    public string InventoryContents
+    {
+        get
+        {
+            if (Inventory.Count > 0)
+            {
+                return string.Join(", ", Inventory);
+            }
+            else
+            {
+                return "Your inventory is empty.";
+            }
+        }
+    }
 }

@@ -13,3 +13,10 @@ C:\Users\Morga\Source\Repos\DungeonExplorer\obj\Debug\DungeonExplorer.csproj.Ass
 C:\Users\Morga\Source\Repos\DungeonExplorer\obj\Debug\DungeonExplorer.csproj.CoreCompileInputs.cache
 C:\Users\Morga\Source\Repos\DungeonExplorer\obj\Debug\DungeonExplorer.exe
 C:\Users\Morga\Source\Repos\DungeonExplorer\obj\Debug\DungeonExplorer.pdb
+C:\Users\Morga\Source\Repos\DungeonExplorerh\bin\Debug\DungeonExplorer.exe.config
+C:\Users\Morga\Source\Repos\DungeonExplorerh\bin\Debug\DungeonExplorer.exe
+C:\Users\Morga\Source\Repos\DungeonExplorerh\bin\Debug\DungeonExplorer.pdb
+C:\Users\Morga\Source\Repos\DungeonExplorerh\obj\Debug\DungeonExplorer.csproj.AssemblyReference.cache
+C:\Users\Morga\Source\Repos\DungeonExplorerh\obj\Debug\DungeonExplorer.csproj.CoreCompileInputs.cache
+C:\Users\Morga\Source\Repos\DungeonExplorerh\obj\Debug\DungeonExplorer.exe
+C:\Users\Morga\Source\Repos\DungeonExplorerh\obj\Debug\DungeonExplorer.pdb
