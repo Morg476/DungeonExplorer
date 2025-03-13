@@ -1,12 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 
+/// <summary>
+/// Represents the main game logic, which includes player interaction 
+/// </summary>
 public class Game
 {
     private Player _newPlayer;
     private Dictionary<string, Room> _rooms;
     private Room _currentRoom;
 
+    /// <summary>
+    /// Initialises a new instance of the game class.
+    /// Sets up rooms throughout them game, intialises the player and then starts the game
+    /// </summary>
     public Game()
     {
         // Initialise multiple rooms and their attributes
@@ -14,17 +22,24 @@ public class Game
         {
             //Dungeon room which containd two items and a monster that can be defeated
             { "Dungeon Entrance", new Room(
-                "You stand at the entrance of an eerie dungeon. The wind howls behind you.",
-                new List<string> { "torch", "map" },
+                "You stand before a massive stone doorway, half-buried in tangled vines and ancient moss. The air is thick with the scent of damp earth and decay. " +
+                "Faint carvings, long eroded by time, whisper of forgotten civilizations and untold dangers. " +
+                "A chilling wind seeps from the dark abyss beyond, carrying distant echoes—whispers, perhaps… or the breathing of something unseen.",
+                new List<string> { "Torch", "Map" },
                 new List<string> { "Goblin" }) },
             //Corridor room which contains two items and two monsters that can be defeated
             { "Dark Corridor", new Room(
-                "The walls narrow as you step into a dark corridor. Shadows flicker wildly.",
+                "The air grows colder as you step into the narrow corridor. The stone walls, slick with moisture, seem to press in around you. " +
+                "Flickering torchlight from the entrance barely reaches this far, leaving most of the passage swallowed in darkness. " +
+                "The faint sound of dripping water echoes through the hall, each drop unsettlingly loud in the eerie silence.\r\n\r\n" +
+                "Somewhere in the distance, a faint scratching noise stirs—something moving, just beyond sight. The floor beneath your feet is uneven, worn down by centuries of footsteps… or something else.",
                 new List<string> { "Potion", "Dagger" },
                 new List<string> { "Skeleton", "Spider" }) },
             //Chamber room which contains two items and one monster that can be defeated
             { "Treasure Chamber", new Room(
-                "Glittering treasures lie in piles, but a growl warns you of danger.",
+                "Gold and jewels glisten in the dim light, spilling from shattered chests and crumbling urns. " +
+                "An ornate pedestal at the far end holds a relic pulsing with energy—its power undeniable.\r\n\r\n" +
+                "But the silence is unnerving. Scattered bones and rusted weapons hint at a deadly past. The air is thick with something unseen… waiting.",
                 new List<string> { "Gold Coin", "Ancient Scroll" },
                 new List<string> { "Dragon" }) }
         };
@@ -38,31 +53,52 @@ public class Game
         Console.WriteLine("\n====================\n" +
             "  DUNGEON EXPLORER        \n" +
             "====================\n");
+
+        Console.WriteLine("You stand at the entrance of a dark, mysterious dungeon, the scent of damp stone and ancient secrets filling the air." +
+            " Legends speak of hidden treasures, deadly traps, and creatures lurking in the shadows. Armed with only your wits—and whatever weapons you can find—you must navigate the labyrinthine halls, uncovering secrets, battling monsters, and surviving the unknown.\r\n\r\n" +
+            "Will you emerge victorious, your pockets lined with gold and glory? Or will the dungeon claim yet another lost soul?\n");
         Start();
     }
-    //Simply displays the menu options at the start of debugging
+    /// <summary>
+    /// Displays the main menu options to the player
+    /// </summary>
     private void DisplayMenu()
     {
         Console.WriteLine("{ 1 } Explore the room");
         Console.WriteLine("{ 2 } Move to another room");
-        Console.WriteLine("{ 3 } Exit Game");
+        Console.WriteLine("{ 3 } View Statistics and Inventory");
+        Console.WriteLine("{ 4 } Exit Game");
     }
-    //Method which controls the game as it starts
+    /// <summary>
+    /// Displays the statistics menu when that option is chosen
+    /// Displays, name, health and inventory contents
+    /// </summary>
+    private void StatMenu()
+    {
+        Console.Clear();
+        Console.WriteLine("===== STATISTICS =====");
+        Console.WriteLine($"Name: {_newPlayer.Name}");
+        Console.WriteLine($"Inventory: {_newPlayer.InventoryContents}");
+        Console.WriteLine($"Health: {_newPlayer.Health}");
+    }
+    /// <summary>
+    /// Starts the game loop, allowing the game to flow and the player to progress through the dungeon.
+    /// </summary>
     public void Start()
     {
         bool playing = true;
 
         while (playing)
         {
+            DisplayMenu();
             try
             {
                 //Calls menu and asks user for input on their choice.
-                DisplayMenu();
-                Console.Write("Enter Choice: ");
+                Console.Write("\n::  ");
 
                 if (!int.TryParse(Console.ReadLine(), out int userChoice))
                 {
-                    //Error catching
+                    //Error catching for users choice
                     Console.WriteLine("Invalid input. Please enter a number.");
                     continue;
                 }
@@ -70,12 +106,17 @@ public class Game
                 switch (userChoice)
                 {
                     case 1:
+                        Console.Clear();
                         Explore();
                         break;
                     case 2:
                         ChangeRoom();
                         break;
                     case 3:
+                        StatMenu();
+                        Console.Write("\n");
+                        break;
+                    case 4:
                         Console.WriteLine("Your adventure continues another day...");
                         playing = false;
                         break;
@@ -91,10 +132,11 @@ public class Game
             }
         }
     }
-    //Method which contains the attributes of the player and prints them out.
+    /// <summary>
+    /// Allows the player to explore the current room, search for items and battle enemies
+    /// </summary>
     private void Explore()
     {
-        Console.Clear();
         Console.WriteLine($"Player: {_newPlayer.Name} \nHealth: {_newPlayer.Health}");
         Console.WriteLine($"Inventory: {_newPlayer.InventoryContents}");
         //Uses GetDescription() to fetch the descriptions of rooms more efficiently for each room entered.
@@ -103,14 +145,45 @@ public class Game
         //Selection to determine whether the room contains monsters, if so prompt the user with the choice to battle.
         if (_currentRoom.HasMonsters())
         {
-            Console.WriteLine("\nMonsters lurking here: " + string.Join(", ", _currentRoom.Monsters));
-            Console.WriteLine("Do you want to fight? (Y/N)");
-            string fightChoice = Console.ReadLine().Trim().ToUpper();
-            //If yes, then call the Fight() method.
-            if (fightChoice == "Y")
+            bool loopExplore = true;
+            while (loopExplore)
             {
-                Fight();
+                Console.WriteLine("\nWould you like to battle? (Y/N)");
+                Console.Write(":: ");
+                string fightChoice = Console.ReadLine().Trim().ToUpper();
+                //If yes, then call the Fight() method.
+                try
+                {
+                    //Selection to decide the user fight choice
+                    switch (fightChoice)
+                    {
+                        //If yes, then call the fight function, and break out of the while loop.
+                        case "Y":
+                            Fight();
+                            loopExplore = false;
+                            break;
+                        case "N":
+                            //Then break out of the while loop, and continue onto next section of the program. 
+                            Console.Write("Not up for a fight?! You can't run forever.\n");
+                            loopExplore = false;
+                            continue;
+                        case "":
+                            //If user enters null value, recalls the Explore funtion to gather an appropriate decision.
+                            Console.Clear();
+                            Console.WriteLine("Please make a choice, Y/N\n\n");
+                            Explore();
+                            loopExplore = true;
+                            break;
+                    }
+
+                }
+                //Any exceptions occur, they will be outputted with the correlating error code. 
+                catch (Exception ex)
+                {
+                    Console.Write($"An error has occured: {ex}");
+                }
             }
+
         }
 
         //Selection to determine if the room has any items in it.
@@ -118,13 +191,14 @@ public class Game
         {
             Console.WriteLine("\nItems you see: " + string.Join(", ", _currentRoom.Items));
             Console.WriteLine("Would you like to pick up an item? (Y/N)");
+            Console.Write(":: ");
             string itemPickUp = Console.ReadLine().Trim().ToUpper();
             //If so then allow the user to choose which item they want, then add that to the inventory of the player.
             if (itemPickUp == "Y")
             {
-                Console.Write("Which item would you like to pick up?: ");
-                string item = Console.ReadLine().Trim().ToLower();
-
+                Console.Write("Which item would you like to pick up?");
+                Console.Write("\n:: ");
+                string item = Console.ReadLine().Trim();
                 if (_currentRoom.Items.Contains(item))
                 {
                     _newPlayer.PickUpItem(item);
@@ -137,20 +211,23 @@ public class Game
             }
         }
     }
-    //Fight method which engages the player in a fight.
+    /// <summary>
+    /// Initiates a fight with the first monster the player encounters
+    /// </summary>
     private void Fight()
     {
         string monster = _currentRoom.Monsters[0];//Chooses rthe first monster in the room, if more than one present. 
-        Console.WriteLine($"You fight the {monster}!");
+        Console.WriteLine($"\nYou fought the {monster}!");
 
         //Simple fightinh mechanic which allows the user to always win (for now), removing 10HP each time.
         _newPlayer.Health -= 10;
         _currentRoom.RemoveMonster(monster);
 
-        Console.WriteLine($"You defeated the {monster}, but lost 10 HP! Current HP: {_newPlayer.Health}");
+        Console.WriteLine($"You defeated the {monster}, but lost 10 HP!\nCurrent HP: {_newPlayer.Health}");
     }
-
-    //Allow the user to decidwe which room they wish to enter.
+    /// <summary>
+    /// Allows the player to switch rooms if another one is available
+    /// </summary>
     private void ChangeRoom()
     {
         //Prints avauilable rooms
