@@ -75,9 +75,3 @@ Otherwise perfectly functional.
 5. [.]  The testing class uses ‘debug.assert’ to verify aspects of the code.
 6. [/]  The implementation of classes, object instantiation, encapsulation
 	and methods are complete and with no issues.
-
-Question Guide:
-Have the requirements been met?
-Is the code formatted using the Style Guidelines correctly?
-Is the code easy to read?
-Are different errors handled correctly?
