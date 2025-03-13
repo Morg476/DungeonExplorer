@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 
 /// <summary>
 /// Represents a room within the game, which contains items, mosnters and a room description
@@ -26,6 +27,7 @@ public class Room
     /// <param name="monsters">The list of monsters in the room, if null and empty list is returned</param>
     public Room(string description, List<string> items, List<string> monsters)
     {
+        Debug.Assert(!string.IsNullOrWhiteSpace(description), "Room description should not be null or empty");
         Description = description;
 
         //Creates a new list if items are null.
@@ -66,6 +68,8 @@ public class Room
     /// <param name="item">The items name to be removed</param>
     public void RemoveItem(string item)
     {
+        Debug.Assert(!string.IsNullOrEmpty(item), "Item name should not be null or empty.");
+        Debug.Assert(Items.Contains(item), $"Item '{item}' does not exist in the room.");
         Items.Remove(item);
     }
     /// <summary>
@@ -74,6 +78,8 @@ public class Room
     /// <param name="monster">The name of the monster to be removed.</param>
     public void RemoveMonster(string monster)
     {
+        Debug.Assert(!string.IsNullOrEmpty(monster), "Monster name should not be null or empty.");
+        Debug.Assert(Monsters.Contains(monster), $"Monster '{monster}' does not exist in the room.");
         Monsters.Remove(monster);
     }
 

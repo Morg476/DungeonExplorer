@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System;
+using System.Diagnostics;
 
 /// <summary>
 /// Represents a player in the game, including the attributes, inventory and the player movements/actions
@@ -31,6 +32,10 @@ public class Player
     /// <param name="currentRoom">The room where the player begins</param>
     public Player(string name, int health, Room currentRoom)
     {
+        Debug.Assert(!string.IsNullOrWhiteSpace(name), "Player name cannot be null or empty.");
+        Debug.Assert(health > 0, "Player health must be greater than zero.");
+        Debug.Assert(currentRoom != null, "Current room cannot be null.");
+
         Name = name;
         Health = health;
         CurrentRoom = currentRoom;
@@ -42,9 +47,23 @@ public class Player
     /// <param name="item">the item that is within the room they are in</param>
     public void PickUpItem(string item)
     {
+        Debug.Assert(!string.IsNullOrWhiteSpace(item), "Item name cannot be null or empty.");
         Console.WriteLine($"You picked up the {item}!\n");
         Inventory.Add(item);
     }
 
-    public string InventoryContents => Inventory.Count > 0 ? string.Join(", ", Inventory) : "Your inventory is empty.";
+    public string InventoryContents
+    {
+        get
+        {
+            if (Inventory.Count > 0)
+            {
+                return string.Join(", ", Inventory);
+            }
+            else
+            {
+                return "Your inventory is empty.";
+            }
+        }
+    }
 }
