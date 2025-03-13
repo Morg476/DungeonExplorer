@@ -1,0 +1,83 @@
+# Feedback
+
+Rhys Thomas
+
+## Game.cs
+
+Good Aspects:
+ame Loop is Clear & Structured
+
+The Start() method runs the game very smooth using a while loop to continuously process any user input.
+Great introduction of a combat system.
+
+Improvements:
+Plenty of room to improve on the combat system in the near future adding other outcomes perhaps.
+
+## Player.cs
+
+Good Aspects:
+Very well structured code, easy to understand.
+Encapsulaition (OOP) within the propterties of the Player class and functions such as PickUpItem()
+
+Improvements:
+Health should have a set maximum value just for game quality. Or else the player is invincible rendering the health system null.
+
+## Room.cs
+
+Good Aspects:
+Good encapsulation on all the room properties within the file. Secure code that wont be tampered by any other methods.
+Room mechanics work great and as anticipated
+
+Improvements:
+Could add a compatible method for the player to check if there is nothing to be taken or fought within the room. Easy checking methods could be provided in the future.
+Otherwise perfectly functional.
+# Checklist:
+
+## Pass standard:
+	
+1. [/] The code compiles and runs.
+2. [/] The player can explore at least one room.
+3. [/] Object instantiation, method calls evident.
+4. [/] There is code review from two students.
+5. [/] Handle invalid commands gracefully without crashing the program.
+
+## 2:2 standard:
+
+1. [.]  Rooms can contain multiple items or monsters.
+2. [.]  The Testing class is used.
+3. [/]  The player can pick up items through an implementation of the
+        Player.PickUpItem() method.
+4. [/]  The C# style guide is followed partially.
+5. [.]  At least one room has a description and can contain one item or one
+	monster. These functionalities are given by the Room.GetDescription() method.
+6. [/]  Method calls from ‘Main’ to methods in other classes
+
+## 2:1 standard:
+
+1. [?]  Pull Requests and code reviews are noted
+2. [?]  You have taken account of the reviews and merging your changes.
+3. [/]  There is a complete implementation of your code with no issues.
+4. [/]  Commenting is mostly through the code files.
+5. [/]  There are at least one Game and Player objects.
+6. [?]  There is evidence of testing.
+7. [/]  Error handling is performed well but there are still issues.
+8. [/]  There is clear evidence of object-oriented features such as classes, object 	instantiation, encapsulation and methods.
+
+## First standard:
+
+1. [?]  You have taken effective account of the reviews by merging your
+	changes or suggesting alternative approaches.
+2. [?]  The video demonstrates a critical reflection and that you learned from
+	the assignment’s experience.
+3. [.]  The implementation is complete with excellent error handling.
+4. [.]  The C# style guide is shown to be adhered to. XML documenting
+	comments are throughout the code.
+5. [.]  The testing class uses ‘debug.assert’ to verify aspects of the code.
+6. [/]  The implementation of classes, object instantiation, encapsulation
+	and methods are complete and with no issues.
+
+Question Guide:
+Have the requirements been met?
+Is the code formatted using the Style Guidelines correctly?
+Is the code easy to read?
+Are different errors handled correctly?
