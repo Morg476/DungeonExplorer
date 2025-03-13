@@ -49,21 +49,38 @@ public class Room
 
     }
     //Boolean operators to check if items length is greater than 0 and monsters length is greater than 0.
+    /// <summary>
+    /// Determines whether the room contains any items.
+    /// </summary>
+    /// <returns>True, if there are items within the room, otherwise, false</returns>
     public bool HasItems() => Items.Count > 0;
+    /// <summary>
+    /// Determines whether there are any monsters in the room
+    /// </summary>
+    /// <returns>True if there are monsers present, otherwise returns false</returns>
     public bool HasMonsters() => Monsters.Count > 0;
 
-    //Function to remove item from the item list.
+    /// <summary>
+    /// Removes an item from a room when it has been collected
+    /// </summary
+    /// <param name="item">The items name to be removed</param>
     public void RemoveItem(string item)
     {
         Items.Remove(item);
     }
-    //Function to remove monster from the monster list.
+    /// <summary>
+    /// Removes a monster from a room when it has been defeated
+    /// </summary>
+    /// <param name="monster">The name of the monster to be removed.</param>
     public void RemoveMonster(string monster)
     {
         Monsters.Remove(monster);
     }
 
-    //New method to return a description of the room and any items and monsters within it. 
+    /// <summary>
+    /// Gets a full description of the room, including its items and monsters. 
+    /// </summary>
+    /// <returns>room description, items and monsters within the room</returns>
     public string GetDescription()
     {
         string itemText = HasItems() ? $"Items: {string.Join(", ", Items)}" : "No items here.";

@@ -36,6 +36,10 @@ public class Player
         CurrentRoom = currentRoom;
     }
 
+    /// <summary>
+    /// Allows the player to pick up and item and will add it to inventory contents
+    /// </summary>
+    /// <param name="item">the item that is within the room they are in</param>
     public void PickUpItem(string item)
     {
         Console.WriteLine($"You picked up the {item}!\n");

@@ -1,6 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net;
+using System.Data;
+using System.Linq;
+using System.Reflection;
+using System.Security.Policy;
+using System.Text;
+using System.Threading.Tasks;
 
 /// <summary>
 /// Represents the main game logic, which includes player interaction 
@@ -169,6 +174,7 @@ public class Game
                 Console.Write("Which item would you like to pick up?");
                 Console.Write("\n:: ");
                 string item = Console.ReadLine().Trim();
+
                 if (_currentRoom.Items.Contains(item))
                 {
                     _newPlayer.PickUpItem(item);
@@ -181,7 +187,9 @@ public class Game
             }
         }
     }
-    //Fight method which engages the player in a fight.
+    /// <summary>
+    /// Initiates a fight with the first monster within the room the player is in
+    /// </summary>
     private void Fight()
     {
         string monster = _currentRoom.Monsters[0];//Chooses rthe first monster in the room, if more than one present. 
@@ -194,7 +202,9 @@ public class Game
         Console.WriteLine($"You defeated the {monster}, but lost 10 HP!\nCurrent HP: {_newPlayer.Health}");
     }
 
-    //Allow the user to decidwe which room they wish to enter.
+    /// <summary>
+    /// Allows the user to move rooms if there is one available from where they are.
+    /// </summary>
     private void ChangeRoom()
     {
         //Prints avauilable rooms
