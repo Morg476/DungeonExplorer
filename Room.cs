@@ -1,12 +1,29 @@
 ﻿using System.Collections.Generic;
 
+/// <summary>
+/// Represents a room within the game, which contains items, mosnters and a room description
+/// </summary>
 public class Room
 {
-    //Get set methods to initialise variables.
+    /// <summary>
+    /// Gets the description of the room
+    /// </summary>
     public string Description { get; private set; }
+    /// <summary>
+    /// Gets the items contained within the room
+    /// </summary>
     public List<string> Items { get; private set; }
+    /// <summary>
+    /// Gets the list of monsters withi the room
+    /// </summary>
     public List<string> Monsters { get; private set; }
 
+    /// <summary>
+    /// Initialises a new instance of the room class, with a descirption, list of items and monsters
+    /// </summary>
+    /// <param name="description">a test description of the room</param>
+    /// <param name="items">The list of items available in the room, if null and empty list is returned</param>
+    /// <param name="monsters">The list of monsters in the room, if null and empty list is returned</param>
     public Room(string description, List<string> items, List<string> monsters)
     {
         Description = description;
@@ -49,25 +66,8 @@ public class Room
     //New method to return a description of the room and any items and monsters within it. 
     public string GetDescription()
     {
-        string itemText;
-        if (HasItems())
-        {
-            itemText = $"Items: {string.Join(", ", Items)}";
-        }
-        else
-        {
-            itemText = "No items here.";
-        }
-
-        string monsterText;
-        if (HasMonsters())
-        {
-            monsterText = $"Monsters: {string.Join(", ", Monsters)}";
-        }
-        else
-        {
-            monsterText = "No monsters here.";
-        }
+        string itemText = HasItems() ? $"Items: {string.Join(", ", Items)}" : "No items here.";
+        string monsterText = HasMonsters() ? $"Monsters: {string.Join(", ", Monsters)}" : "No monsters here.";
 
         return $"{Description}\n\n{itemText}\n{monsterText}";
     }
