@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Security.Policy;
@@ -22,6 +23,7 @@ public class Game
     /// </summary>
     public Game()
     {
+        Debug.Assert(_rooms == null, "_rooms should be uninitialised before setup.");
         // Initialise multiple rooms and their attributes
         _rooms = new Dictionary<string, Room>
         {
@@ -51,11 +53,15 @@ public class Game
                 new List<string> { "Dragon" }) }
         };
 
+        Debug.Assert(_rooms.Count > 0, "Rooms should be intialised with at least one room.");
+
         //Sets the starting room of the game as the Dungeon Entrance
         _currentRoom = _rooms["Dungeon Entrance"];
+        Debug.Assert(_currentRoom != null, "_currentRoom should not be null after intilaisation.");
 
         //Initlaises the player, named Hero and sets health within the currentRoom
         _newPlayer = new Player("Hero", 100, _currentRoom);
+        Debug.Assert(_newPlayer != null, "Player should be properly intialised.");
 
         Console.WriteLine("\n====================\n" +
             "  DUNGEON EXPLORER        \n" +
@@ -144,6 +150,7 @@ public class Game
     /// </summary>
     private void Explore()
     {
+        Debug.Assert(_currentRoom != null, "_currentRoom should never be null");
         Console.WriteLine($"Player: {_newPlayer.Name} \nHealth: {_newPlayer.Health}");
         Console.WriteLine($"Inventory: {_newPlayer.InventoryContents}");
         //Uses GetDescription() to fetch the descriptions of rooms more efficiently for each room entered.
@@ -176,6 +183,7 @@ public class Game
                 Console.Write("Which item would you like to pick up?");
                 Console.Write("\n:: ");
                 string item = Console.ReadLine().Trim();
+                Debug.Assert(!string.IsNullOrEmpty(item), "Item name should not be empty.");
 
                 if (_currentRoom.Items.Contains(item))
                 {
@@ -219,6 +227,8 @@ public class Game
         //Asks user to enter the name of the room (little specific but will change later on for ease of error handling)
         Console.Write("\nEnter the name of the room you want to enter: ");
         string chosenRoom = Console.ReadLine().Trim();
+        Debug.Assert(!string.IsNullOrEmpty(chosenRoom), "Room name should not be empty.");
+
 
         if (_rooms.ContainsKey(chosenRoom))
         {
