@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 public class Game
 {
     private Player _newPlayer;
-    private Dictionary<string, Room> _rooms;
+    private Dictionary <string, Room> _rooms;
     private Room _currentRoom;
 
     /// <summary>
@@ -27,9 +27,11 @@ public class Game
         {
             //Dungeon room which containd two items and a monster that can be defeated
             { "Dungeon Entrance", new Room(
+
                 "You stand before a massive stone doorway, half-buried in tangled vines and ancient moss. The air is thick with the scent of damp earth and decay. " +
                 "Faint carvings, long eroded by time, whisper of forgotten civilizations and untold dangers. " +
                 "A chilling wind seeps from the dark abyss beyond, carrying distant echoes—whispers, perhaps… or the breathing of something unseen.",
+
                 new List<string> { "Torch", "Map" },
                 new List<string> { "Goblin" }) },
             //Corridor room which contains two items and two monsters that can be defeated
@@ -195,7 +197,7 @@ public class Game
         string monster = _currentRoom.Monsters[0];//Chooses rthe first monster in the room, if more than one present. 
         Console.WriteLine($"\nYou fought the {monster}!");
 
-        //Simple fightinh mechanic which allows the user to always win (for now), removing 10HP each time.
+        //Simple fighting mechanic which allows the user to always win (for now), removing 10HP each time.
         _newPlayer.Health -= 10;
         _currentRoom.RemoveMonster(monster);
 
