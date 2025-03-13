@@ -36,32 +36,11 @@ public class Player
         CurrentRoom = currentRoom;
     }
 
-    /// <summary>
-    /// Adds an item to the players inventory
-    /// </summary>
-    /// <param name="item">The item picked up in the room</param>
     public void PickUpItem(string item)
     {
         Console.WriteLine($"You picked up the {item}!\n");
         Inventory.Add(item);
     }
 
-    //Function to simply output the contents of the inventory whenever called.
-    /// <summary>
-    /// Gets the contents of the players inventory and returns whatevers within it. 
-    /// </summary>
-    public string InventoryContents
-    {
-        get
-        {
-            if (Inventory.Count > 0)
-            {
-                return string.Join(", ", Inventory);
-            }
-            else
-            {
-                return "Your inventory is empty.";
-            }
-        }
-    }
+    public string InventoryContents => Inventory.Count > 0 ? string.Join(", ", Inventory) : "Your inventory is empty.";
 }

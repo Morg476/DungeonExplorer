@@ -66,25 +66,8 @@ public class Room
     //New method to return a description of the room and any items and monsters within it. 
     public string GetDescription()
     {
-        string itemText;
-        if (HasItems())
-        {
-            itemText = $"Item(s), within this room: {string.Join(", ", Items)}";
-        }
-        else
-        {
-            itemText = "No items to scavenge for in here!";
-        }
-
-        string monsterText;
-        if (HasMonsters())
-        {
-            monsterText = $"Monster(s), lurking in this room: {string.Join(", ", Monsters)}";
-        }
-        else
-        {
-            monsterText = "You're safe, for now... There are no monsters nearby!";
-        }
+        string itemText = HasItems() ? $"Items: {string.Join(", ", Items)}" : "No items here.";
+        string monsterText = HasMonsters() ? $"Monsters: {string.Join(", ", Monsters)}" : "No monsters here.";
 
         return $"{Description}\n\n{itemText}\n{monsterText}";
     }

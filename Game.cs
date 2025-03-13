@@ -145,43 +145,13 @@ public class Game
         //Selection to determine whether the room contains monsters, if so prompt the user with the choice to battle.
         if (_currentRoom.HasMonsters())
         {
-            bool loopExplore = true;
-            while (loopExplore)
+            Console.WriteLine("\nMonsters lurking here: " + string.Join(", ", _currentRoom.Monsters));
+            Console.WriteLine("Do you want to fight? (Y/N)");
+            string fightChoice = Console.ReadLine().Trim().ToUpper();
+            //If yes, then call the Fight() method.
+            if (fightChoice == "Y")
             {
-                Console.WriteLine("\nWould you like to battle? (Y/N)");
-                Console.Write(":: ");
-                string fightChoice = Console.ReadLine().Trim().ToUpper();
-                //If yes, then call the Fight() method.
-                try
-                {
-                    //Selection to decide the user fight choice
-                    switch (fightChoice)
-                    {
-                        //If yes, then call the fight function, and break out of the while loop.
-                        case "Y":
-                            Fight();
-                            loopExplore = false;
-                            break;
-                        case "N":
-                            //Then break out of the while loop, and continue onto next section of the program. 
-                            Console.Write("Not up for a fight?! You can't run forever.\n");
-                            loopExplore = false;
-                            continue;
-                        case "":
-                            //If user enters null value, recalls the Explore funtion to gather an appropriate decision.
-                            Console.Clear();
-                            Console.WriteLine("Please make a choice, Y/N\n\n");
-                            Explore();
-                            loopExplore = true;
-                            break;
-                    }
-
-                }
-                //Any exceptions occur, they will be outputted with the correlating error code. 
-                catch (Exception ex)
-                {
-                    Console.Write($"An error has occured: {ex}");
-                }
+                Fight();
             }
 
         }
@@ -211,9 +181,7 @@ public class Game
             }
         }
     }
-    /// <summary>
-    /// Initiates a fight with the first monster the player encounters
-    /// </summary>
+    //Fight method which engages the player in a fight.
     private void Fight()
     {
         string monster = _currentRoom.Monsters[0];//Chooses rthe first monster in the room, if more than one present. 
@@ -225,9 +193,8 @@ public class Game
 
         Console.WriteLine($"You defeated the {monster}, but lost 10 HP!\nCurrent HP: {_newPlayer.Health}");
     }
-    /// <summary>
-    /// Allows the player to switch rooms if another one is available
-    /// </summary>
+
+    //Allow the user to decidwe which room they wish to enter.
     private void ChangeRoom()
     {
         //Prints avauilable rooms
