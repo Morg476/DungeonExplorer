@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System;
 using System.Diagnostics;
+using DungeonExplorer;
+using System.Linq;
 
 /// <summary>
 /// Represents a player in the game, including the attributes, inventory and the player movements/actions
@@ -22,10 +24,13 @@ public class Player
     /// <summary>
     /// Gets the players inventory which contains all of the collected items whilst the game is running.
     /// </summary>
-    public List<string> Inventory { get; set; } = new List<string>();
+    public Inventory PlayerInventory { get; set; }
+
+    public int Attack { get; set; } = 10;
+    public int Defense { get; set; } = 5;
 
     /// <summary>
-    /// Intialises a new instance of the player class with the specified attributes within the paramaters. 
+    /// Initializes a new instance of the player class with the specified attributes within the parameters.
     /// </summary>
     /// <param name="name">The name of the player</param>
     /// <param name="health">The health of the player</param>
@@ -39,31 +44,56 @@ public class Player
         Name = name;
         Health = health;
         CurrentRoom = currentRoom;
+        PlayerInventory = new Inventory();  // Initialize the player's inventory
     }
 
     /// <summary>
-    /// Allows the player to pick up and item and will add it to inventory contents
+    /// Allows the player to pick up an item and will add it to inventory contents
     /// </summary>
-    /// <param name="item">the item that is within the room they are in</param>
-    public void PickUpItem(string item)
+    /// <param name="item">The item that is within the room they are in</param>
+    public void PickUpItem(Item item)
     {
-        Debug.Assert(!string.IsNullOrWhiteSpace(item), "Item name cannot be null or empty.");
-        Console.WriteLine($"You picked up the {item}!\n");
-        Inventory.Add(item);
+        Debug.Assert(item != null, "Item cannot be null.");
+        Console.WriteLine($"You picked up the {item.Name}!\n");
+        PlayerInventory.AddItem(item);
     }
 
+    /// <summary>
+    /// Displays the contents of the player's inventory
+    /// </summary>
     public string InventoryContents
     {
         get
         {
-            if (Inventory.Count > 0)
+            if (PlayerInventory.Items.Count > 0)
             {
-                return string.Join(", ", Inventory);
+                return string.Join(", ", PlayerInventory.Items.Select(i => i.Name));  // i.Name assumes i is an Item object.
             }
             else
             {
                 return "Your inventory is empty.";
             }
         }
+    }
+
+    /// <summary>
+    /// Method to process damage taken by the player
+    /// </summary>
+    public void DamageTaken(int damage)
+    {
+        int actualDamage = Math.Max(damage - Defense, 0);
+        Health -= actualDamage;
+        Health = Math.Max(Health, 0);
+        Console.WriteLine($"{Name} takes {actualDamage} damage! Remaining HP: {Health}");
+    }
+
+    /// <summary>
+    /// Allows the player to attack a monster
+    /// </summary>
+    public void AttackMonster(Monster monster)
+    {
+        int damageDealt = Math.Max(Attack - monster.Defense, 0);
+        monster.DamageTaken(damageDealt);  // Assuming the monster has a DamageTaken method
+        Console.WriteLine($"{Name} attacks {monster.Name} for {damageDealt} damage!");
     }
 }

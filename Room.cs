@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Security.Cryptography.X509Certificates;
+using DungeonExplorer;
 
 /// <summary>
 /// Represents a room within the game, which contains items, mosnters and a room description
@@ -13,7 +15,7 @@ public class Room
     /// <summary>
     /// Gets the items contained within the room
     /// </summary>
-    public List<string> Items { get; private set; }
+    public List<Item> Items { get; private set; }
     /// <summary>
     /// Gets the list of monsters withi the room
     /// </summary>
@@ -25,30 +27,13 @@ public class Room
     /// <param name="description">a test description of the room</param>
     /// <param name="items">The list of items available in the room, if null and empty list is returned</param>
     /// <param name="monsters">The list of monsters in the room, if null and empty list is returned</param>
-    public Room(string description, List<string> items, List<string> monsters)
+    public Room(string description, List<Item> items, List<string> monsters)
     {
         Debug.Assert(!string.IsNullOrWhiteSpace(description), "Room description should not be null or empty");
         Description = description;
 
-        //Creates a new list if items are null.
-        if (items == null)
-        {
-            Items = new List<string>();
-        }
-        else
-        {
-            Items = items;
-        }
-        //Same here if monsters is null create a new list.
-        if (monsters == null)
-        {
-            Monsters = new List<string>();
-        }
-        else
-        {
-            Monsters = monsters;
-        }
-
+        Items = items;
+        Monsters = monsters;
     }
     //Boolean operators to check if items length is greater than 0 and monsters length is greater than 0.
     /// <summary>

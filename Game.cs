@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
+using DungeonExplorer;
 
 /// <summary>
 /// Represents the main game logic, which includes player interaction 
@@ -177,18 +178,33 @@ public class Game
             Console.WriteLine("Would you like to pick up an item? (Y/N)");
             Console.Write(":: ");
             string itemPickUp = Console.ReadLine().Trim().ToUpper();
-            //If so then allow the user to choose which item they want, then add that to the inventory of the player.
+            // If so, allow the user to choose which item they want, then add that to the inventory of the player.
             if (itemPickUp == "Y")
             {
                 Console.Write("Which item would you like to pick up?");
                 Console.Write("\n:: ");
-                string item = Console.ReadLine().Trim();
-                Debug.Assert(!string.IsNullOrEmpty(item), "Item name should not be empty.");
+                string itemName = Console.ReadLine().Trim();
+                Debug.Assert(!string.IsNullOrEmpty(itemName), "Item name should not be empty.");
 
-                if (_currentRoom.Items.Contains(item))
+                // Find the corresponding Item object based on the item name
+                Item itemToPickUp = null;
+                foreach (string item in _currentRoom.Items)
                 {
-                    _newPlayer.PickUpItem(item);
-                    _currentRoom.RemoveItem(item);
+                    // For example, if the item is a Potion, Weapon, etc., find it in the room's list
+                    // You'll need to create the Item objects for each item in the room (e.g., Potion, Weapon, etc.)
+                    if (item == itemName)  // In a real game, you should match by name or a more sophisticated approach
+                    {
+                        // Create an example item (replace this with your actual logic for creating items)
+                        // This part assumes that the room contains only strings as item names. You may need to adjust your logic.
+                        itemToPickUp = new Potion(item, "A healing potion", 50, 10);  // Example: create a potion
+                        break;
+                    }
+                }
+
+                if (itemToPickUp != null)
+                {
+                    _newPlayer.PickUpItem(itemToPickUp);  // Pass the Item object, not the string
+                    _currentRoom.RemoveItem(itemName);  // Remove the item from the room
                 }
                 else
                 {
