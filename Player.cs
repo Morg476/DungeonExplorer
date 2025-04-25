@@ -24,7 +24,7 @@ public class Player
     /// <summary>
     /// Gets the players inventory which contains all of the collected items whilst the game is running.
     /// </summary>
-    public Inventory PlayerInventory { get; set; }
+    public List<Item> Inventory { get; private set; }
 
     public int Attack { get; set; } = 10;
     public int Defense { get; set; } = 5;
@@ -35,16 +35,16 @@ public class Player
     /// <param name="name">The name of the player</param>
     /// <param name="health">The health of the player</param>
     /// <param name="currentRoom">The room where the player begins</param>
-    public Player(string name, int health, Room currentRoom)
+    public Player(string name, int health, Room startingRoom)
     {
         Debug.Assert(!string.IsNullOrWhiteSpace(name), "Player name cannot be null or empty.");
         Debug.Assert(health > 0, "Player health must be greater than zero.");
-        Debug.Assert(currentRoom != null, "Current room cannot be null.");
+        Debug.Assert(startingRoom != null, "Current room cannot be null.");
 
         Name = name;
         Health = health;
-        CurrentRoom = currentRoom;
-        PlayerInventory = new Inventory();  // Initialize the player's inventory
+        CurrentRoom = startingRoom;
+        Inventory = new List<Item>();  // Initialize the player's inventory
     }
 
     /// <summary>
@@ -55,7 +55,7 @@ public class Player
     {
         Debug.Assert(item != null, "Item cannot be null.");
         Console.WriteLine($"You picked up the {item.Name}!\n");
-        PlayerInventory.AddItem(item);
+        Inventory.Add(item);
     }
 
     /// <summary>
@@ -65,9 +65,9 @@ public class Player
     {
         get
         {
-            if (PlayerInventory.Items.Count > 0)
+            if (Inventory.Count > 0)
             {
-                return string.Join(", ", PlayerInventory.Items.Select(i => i.Name));  // i.Name assumes i is an Item object.
+                return string.Join(", ", Inventory.Select(i => i.Name));  // i.Name assumes i is an Item object.
             }
             else
             {

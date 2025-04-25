@@ -51,9 +51,8 @@ namespace DungeonExplorer
     // Example subclass for a Potion (extends Item class)
     public class Potion : Item
     {
-        public int HealingAmount { get; private set; }
+        public int HealingAmount { get; set; }
 
-        // Corrected constructor (ItemType.Potion)
         public Potion(string name, string description, int healingAmount, int value)
             : base(name, description, ItemType.Potion, value)
         {

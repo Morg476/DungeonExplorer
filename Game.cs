@@ -1,97 +1,69 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
-using System.Security.Policy;
-using System.Text;
-using System.Threading.Tasks;
 using DungeonExplorer;
 
 /// <summary>
 /// Represents the main game logic, which includes player interaction 
 /// </summary>
+
 public class Game
 {
     private Player _newPlayer;
-    private Dictionary<string, Room> _rooms;
+    private GameMap _map;
     private Room _currentRoom;
 
-    /// <summary>
-    /// Initializes a new instance of the game class.
-    /// Sets up rooms throughout the game, initializes the player, and then starts the game.
-    /// </summary>
     public Game()
     {
-        Debug.Assert(_rooms == null, "_rooms should be uninitialized before setup.");
-        // Initialize multiple rooms and their attributes
-        _rooms = new Dictionary<string, Room>
-        {
-            // Dungeon Entrance with two items and one monster
-            { "Dungeon Entrance", new Room(
-                "You stand before a massive stone doorway, half-buried in tangled vines and ancient moss. The air is thick with the scent of damp earth and decay. " +
-                "Faint carvings, long eroded by time, whisper of forgotten civilizations and untold dangers. " +
-                "A chilling wind seeps from the dark abyss beyond, carrying distant echoes—whispers, perhaps… or the breathing of something unseen.",
-                new List<Item>
-                {
-                    new Item("Torch", "A basic torch that lights up dark paths", ItemType.Misc, 5),
-                    new Item("Map", "A faded dungeon map with barely legible markings", ItemType.Misc, 3)
-                },
-                new List<string> { "Goblin" })
+        _map = new GameMap();  // Initialize the GameMap object here
+
+        // Create rooms
+        var entrance = new Room("Dungeon Entrance",
+            "You stand before a massive stone doorway, half-buried in tangled vines and ancient moss. The air is thick with the scent of damp earth and decay.",
+            new List<Item>
+            {
+                new Item("Torch", "A basic torch that lights up dark paths", ItemType.Misc, 5),
+                new Item("Map", "A faded dungeon map with barely legible markings", ItemType.Misc, 3)
             },
+            new List<string> { "Goblin" });
 
-            // Dark Corridor with two items and two monsters
-            { "Dark Corridor", new Room(
-                "The air grows colder as you step into the narrow corridor. The stone walls, slick with moisture, seem to press in around you. " +
-                "Flickering torchlight from the entrance barely reaches this far, leaving most of the passage swallowed in darkness. " +
-                "The faint sound of dripping water echoes through the hall, each drop unsettlingly loud in the eerie silence.\r\n\r\n" +
-                "Somewhere in the distance, a faint scratching noise stirs—something moving, just beyond sight. The floor beneath your feet is uneven, worn down by centuries of footsteps… or something else.",
-                new List<Item>
-                {
-                    new Potion("Potion", "A red healing potion", 50, 10),
-                    new Item("Dagger", "A rusty but sharp dagger", ItemType.Weapon, 8)
-                },
-                new List<string> { "Skeleton", "Spider" })
+        var corridor = new Room("Dark Corridor",
+            "The air grows colder as you step into the narrow corridor...",
+            new List<Item>
+            {
+                new Potion("Potion", "A red healing potion", 50, 10),
+                new Item("Dagger", "A rusty but sharp dagger", ItemType.Weapon, 8)
             },
+            new List<string> { "Skeleton", "Spider" });
 
-            // Treasure Chamber with two items and one monster
-            { "Treasure Chamber", new Room(
-                "Gold and jewels glisten in the dim light, spilling from shattered chests and crumbling urns. " +
-                "An ornate pedestal at the far end holds a relic pulsing with energy—its power undeniable.\r\n\r\n" +
-                "But the silence is unnerving. Scattered bones and rusted weapons hint at a deadly past. The air is thick with something unseen… waiting.",
-                new List<Item>
-                {
-                    new Item("Gold Coin", "A shiny gold coin from a forgotten empire", ItemType.Misc, 2),
-                    new Item("Ancient Scroll", "An old scroll containing forbidden knowledge", ItemType.Misc, 20)
-                },
-                new List<string> { "Dragon" })
-            }
-        };
+        var chamber = new Room("Treasure Chamber",
+            "Gold and jewels glisten in the dim light...",
+            new List<Item>
+            {
+                new Item("Gold Coin", "A shiny gold coin", ItemType.Misc, 2),
+                new Item("Ancient Scroll", "An old scroll", ItemType.Misc, 20)
+            },
+            new List<string> { "Dragon" });
 
-        Debug.Assert(_rooms.Count > 0, "Rooms should be initialized with at least one room.");
+        // Add rooms to the map
+        _map.AddRoom(entrance);
+        _map.AddRoom(corridor);
+        _map.AddRoom(chamber);
 
-        // Sets the starting room of the game as the Dungeon Entrance
-        _currentRoom = _rooms["Dungeon Entrance"];
-        Debug.Assert(_currentRoom != null, "_currentRoom should not be null after initialization.");
+        // Connect rooms
+        _map.ConnectRooms("Dungeon Entrance", "Dark Corridor");
+        _map.ConnectRooms("Dark Corridor", "Treasure Chamber");
 
-        // Initializes the player, named Hero, and sets health within the currentRoom
+        // Start the game with the first room
+        _currentRoom = entrance;
         _newPlayer = new Player("Hero", 100, _currentRoom);
-        Debug.Assert(_newPlayer != null, "Player should be properly initialized.");
 
-        Console.WriteLine("\n====================\n" +
-            "  DUNGEON EXPLORER        \n" +
-            "====================\n");
-
-        Console.WriteLine("You stand at the entrance of a dark, mysterious dungeon, the scent of damp stone and ancient secrets filling the air." +
-            " Legends speak of hidden treasures, deadly traps, and creatures lurking in the shadows. Armed with only your wits—and whatever weapons you can find—you must navigate the labyrinthine halls, uncovering secrets, battling monsters, and surviving the unknown.\r\n\r\n" +
-            "Will you emerge victorious, your pockets lined with gold and glory? Or will the dungeon claim yet another lost soul?\n");
+        Console.WriteLine("\n====================\n  DUNGEON EXPLORER\n====================\n");
+        Console.WriteLine("You stand at the entrance of a dark, mysterious dungeon...\n");
         Start();
     }
 
-    /// <summary>
-    /// Displays the main menu options to the player
-    /// </summary>
     private void DisplayMenu()
     {
         Console.WriteLine("{ 1 } Explore the room");
@@ -100,22 +72,19 @@ public class Game
         Console.WriteLine("{ 4 } Exit Game");
     }
 
-    /// <summary>
-    /// Displays the statistics menu when that option is chosen
-    /// Displays, name, health and inventory contents
-    /// </summary>
     private void StatMenu()
     {
         Console.Clear();
         Console.WriteLine("===== STATISTICS =====");
         Console.WriteLine($"Name: {_newPlayer.Name}");
-        Console.WriteLine($"Inventory: {_newPlayer.InventoryContents}");
         Console.WriteLine($"Health: {_newPlayer.Health}");
+        Console.WriteLine("Inventory:");
+        foreach (var item in _newPlayer.Inventory)
+        {
+            Console.WriteLine($"- {item.Name}: {item.Description}");
+        }
     }
 
-    /// <summary>
-    /// Starts the game loop, allowing the game to flow and the player to progress through the dungeon.
-    /// </summary>
     public void Start()
     {
         bool playing = true;
@@ -123,148 +92,109 @@ public class Game
         while (playing)
         {
             DisplayMenu();
-            try
-            {
-                // Calls menu and asks user for input on their choice.
-                Console.Write("\n::  ");
+            Console.Write("\n::  ");
 
-                if (!int.TryParse(Console.ReadLine(), out int userChoice))
-                {
-                    // Error catching for users choice
-                    Console.WriteLine("Invalid input. Please enter a number.");
-                    continue;
-                }
-                // Switch case to control the outcome of the program based on the inputs of the user
-                switch (userChoice)
-                {
-                    case 1:
-                        Console.Clear();
-                        Explore();
-                        break;
-                    case 2:
-                        ChangeRoom();
-                        break;
-                    case 3:
-                        StatMenu();
-                        Console.Write("\n");
-                        break;
-                    case 4:
-                        Console.WriteLine("Your adventure continues another day...");
-                        playing = false;
-                        break;
-                    default:
-                        Console.WriteLine("Invalid choice, please try again.");
-                        break;
-                }
-            }
-            catch (Exception ex)
+            if (!int.TryParse(Console.ReadLine(), out int userChoice))
             {
-                // Prints error if one occurs
-                Console.WriteLine($"An error has occurred: {ex.Message}");
+                Console.WriteLine("Invalid input. Please enter a number.");
+                continue;
+            }
+
+            switch (userChoice)
+            {
+                case 1:
+                    Console.Clear();
+                    Explore();
+                    break;
+                case 2:
+                    ChangeRoom();
+                    break;
+                case 3:
+                    StatMenu();
+                    break;
+                case 4:
+                    Console.WriteLine("Your adventure continues another day...");
+                    playing = false;
+                    break;
+                default:
+                    Console.WriteLine("Invalid choice, please try again.");
+                    break;
             }
         }
     }
 
-    /// <summary>
-    /// Allows the player to explore the current room, search for items and battle enemies
-    /// </summary>
     private void Explore()
     {
-        Debug.Assert(_currentRoom != null, "_currentRoom should never be null");
-        Console.WriteLine($"Player: {_newPlayer.Name} \nHealth: {_newPlayer.Health}");
-        Console.WriteLine($"Inventory: {_newPlayer.InventoryContents}");
-        // Uses GetDescription() to fetch the descriptions of rooms more efficiently for each room entered.
-        Console.WriteLine($"\n{_currentRoom.GetDescription()}");
+        Console.WriteLine($"\nPlayer: {_newPlayer.Name} \nHealth: {_newPlayer.Health}");
+        Console.WriteLine($"Room: {_currentRoom.GetDescription()}");
 
-        // Selection to determine whether the room contains monsters, if so prompt the user with the choice to battle.
         if (_currentRoom.HasMonsters())
         {
-            Console.WriteLine("\nMonsters lurking here: " + string.Join(", ", _currentRoom.Monsters));
-            Console.WriteLine("Do you want to fight? (Y/N)");
+            Console.WriteLine("\nMonsters: " + string.Join(", ", _currentRoom.Monsters));
+            Console.Write("Do you want to fight? (Y/N): ");
             string fightChoice = Console.ReadLine().Trim().ToUpper();
-            // If yes, then call the Fight() method.
+
             if (fightChoice == "Y")
             {
                 Fight();
             }
         }
 
-        // Selection to determine if the room has any items in it.
         if (_currentRoom.HasItems())
         {
-            Console.WriteLine("\nItems you see: " + string.Join(", ", _currentRoom.Items.Select(i => i.Name)));
-            Console.WriteLine("Would you like to pick up an item? (Y/N)");
-            Console.Write(":: ");
+            Console.WriteLine("\nItems: " + string.Join(", ", _currentRoom.Items.Select(i => i.Name)));
+            Console.Write("Pick up an item? (Y/N): ");
             string itemPickUp = Console.ReadLine().Trim().ToUpper();
-            // If so, allow the user to choose which item they want, then add that to the inventory of the player.
+
             if (itemPickUp == "Y")
             {
-                Console.Write("Which item would you like to pick up?");
-                Console.Write("\n:: ");
+                Console.Write("Which item? :: ");
                 string itemName = Console.ReadLine().Trim();
-                Debug.Assert(!string.IsNullOrEmpty(itemName), "Item name should not be empty.");
 
-                // Find the corresponding Item object based on the item name
-                Item itemToPickUp = null;
-                foreach (Item item in _currentRoom.Items)
+                var item = _currentRoom.Items.FirstOrDefault(i => i.Name.Equals(itemName, StringComparison.OrdinalIgnoreCase));
+                if (item != null)
                 {
-                    if (item.Name == itemName)  // Correct: comparing Item.Name to itemName (string)
-                    {
-                        itemToPickUp = item;
-                        break;
-                    }
-                }
-
-                if (itemToPickUp != null)
-                {
-                    _newPlayer.PickUpItem(itemToPickUp);  // Pass the Item object, not the string
-                    _currentRoom.RemoveItem(itemName);  // Remove the item from the room
+                    _newPlayer.PickUpItem(item);
+                    _currentRoom.RemoveItem(itemName);
+                    Console.WriteLine($"{itemName} added to inventory.");
                 }
                 else
                 {
-                    Console.WriteLine("That item is not here.");
+                    Console.WriteLine("That item is not in this room.");
                 }
             }
         }
     }
 
-    /// <summary>
-    /// Initiates a fight with the first monster within the room the player is in
-    /// </summary>
     private void Fight()
     {
-        string monster = _currentRoom.Monsters[0];  // Chooses the first monster in the room, if more than one present.
+        string monster = _currentRoom.Monsters[0];
         Console.WriteLine($"\nYou fought the {monster}!");
 
-        // Simple fighting mechanic which allows the user to always win (for now), removing 10HP each time.
         _newPlayer.Health -= 10;
         _currentRoom.RemoveMonster(monster);
 
-        Console.WriteLine($"You defeated the {monster}, but lost 10 HP!\nCurrent HP: {_newPlayer.Health}");
+        Console.WriteLine($"You defeated the {monster}, but lost 10 HP! Current HP: {_newPlayer.Health}");
     }
 
-    /// <summary>
-    /// Allows the user to move rooms if there is one available from where they are.
-    /// </summary>
     private void ChangeRoom()
     {
-        // Prints available rooms
         Console.WriteLine("\nAvailable rooms:");
-        foreach (var room in _rooms.Keys)
+        var connected = _map.GetConnectedRooms(_currentRoom.Name);
+
+        foreach (var roomName in connected)
         {
-            Console.WriteLine($"- {room}");
+            Console.WriteLine($"- {roomName}");
         }
 
-        // Asks user to enter the name of the room (a little specific but will change later on for ease of error handling)
-        Console.Write("\nEnter the name of the room you want to enter: ");
+        Console.Write("\nEnter the room name you want to move to: ");
         string chosenRoom = Console.ReadLine().Trim();
-        Debug.Assert(!string.IsNullOrEmpty(chosenRoom), "Room name should not be empty.");
 
-        if (_rooms.ContainsKey(chosenRoom))
+        if (connected.Contains(chosenRoom))
         {
-            _currentRoom = _rooms[chosenRoom];
+            _currentRoom = _map.GetRoom(chosenRoom);
             _newPlayer.CurrentRoom = _currentRoom;
-            Console.WriteLine($"\nYou have entered: {chosenRoom}\n");
+            Console.WriteLine($"\nYou have entered: {chosenRoom}");
         }
         else
         {
@@ -272,3 +202,4 @@ public class Game
         }
     }
 }
+
