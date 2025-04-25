@@ -16,7 +16,7 @@ public class Game
 
     public Game()
     {
-        _map = new GameMap();  // Initialize the GameMap object here
+        _map = new GameMap();
 
         // Create rooms
         var entrance = new Room("Dungeon Entrance",
@@ -46,7 +46,6 @@ public class Game
             },
             new List<string> { "Dragon" });
 
-        // Add rooms to the map
         _map.AddRoom(entrance);
         _map.AddRoom(corridor);
         _map.AddRoom(chamber);
@@ -55,7 +54,6 @@ public class Game
         _map.ConnectRooms("Dungeon Entrance", "Dark Corridor");
         _map.ConnectRooms("Dark Corridor", "Treasure Chamber");
 
-        // Start the game with the first room
         _currentRoom = entrance;
         _newPlayer = new Player("Hero", 100, _currentRoom);
 
@@ -73,17 +71,32 @@ public class Game
     }
 
     private void StatMenu()
+{
+    Console.Clear();
+    Console.WriteLine("===== STATISTICS =====");
+    Console.WriteLine($"Name: {_newPlayer.Name}");
+    Console.WriteLine($"Health: {_newPlayer.Health}");
+
+    Console.WriteLine("\nInventory (sorted by value):");
+    var sortedItems = _newPlayer.Inventory
+        .OrderByDescending(i => i.Value)
+        .Select(i => $"{i.Name} - {i.Description} ({i.Value} gold)");
+
+    foreach (var item in sortedItems)
     {
-        Console.Clear();
-        Console.WriteLine("===== STATISTICS =====");
-        Console.WriteLine($"Name: {_newPlayer.Name}");
-        Console.WriteLine($"Health: {_newPlayer.Health}");
-        Console.WriteLine("Inventory:");
-        foreach (var item in _newPlayer.Inventory)
-        {
-            Console.WriteLine($"- {item.Name}: {item.Description}");
-        }
+        Console.WriteLine($"- {item}");
     }
+
+    Console.WriteLine("\nWeapons Only:");
+    var weapons = _newPlayer.Inventory
+        .Where(i => i.ItemType == ItemType.Weapon)
+        .Select(i => $"{i.Name} - {i.Description}");
+
+    foreach (var weapon in weapons)
+    {
+        Console.WriteLine($"- {weapon}");
+    }
+}
 
     public void Start()
     {

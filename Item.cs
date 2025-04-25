@@ -6,16 +6,16 @@ using System.Threading.Tasks;
 
 namespace DungeonExplorer
 {
-    // Base class for an Item in the game
+    
     public class Item
     {
-        // Basic properties of an item
-        public string Name { get; private set; }      // Name of the item (e.g., "Healing Potion")
-        public string Description { get; private set; } // A short description of the item
-        public ItemType ItemType { get; private set; }     // Type of item (e.g., Potion, Weapon, Key)
-        public int Value { get; private set; }          // Value of the item (could be gold, or a stat boost)
+        
+        public string Name { get; private set; }     
+        public string Description { get; private set; }
+        public ItemType ItemType { get; private set; }    
+        public int Value { get; private set; }         
 
-        // Constructor to create a basic item
+        
         public Item(string name, string description, ItemType type, int value)
         {
             Name = name;
@@ -24,13 +24,11 @@ namespace DungeonExplorer
             Value = value;
         }
 
-        // Override ToString() to print item details
         public override string ToString()
         {
             return $"{Name} - {Description} (Value: {Value} Gold)";
         }
 
-        // Use the item (could be overridden by specific item types)
         public virtual void Use(Player player)
         {
             Console.WriteLine($"You use {Name}. It has no effect.");
@@ -38,7 +36,6 @@ namespace DungeonExplorer
     }
 
 
-    // Enum for item types (e.g., weapons, potions, keys)
     public enum ItemType
     {
         Weapon,
@@ -48,7 +45,6 @@ namespace DungeonExplorer
         Misc
     }
 
-    // Example subclass for a Potion (extends Item class)
     public class Potion : Item
     {
         public int HealingAmount { get; set; }
@@ -59,7 +55,6 @@ namespace DungeonExplorer
             HealingAmount = healingAmount;
         }
 
-        // Override Use() to apply healing effect
         public override void Use(Player player)
         {
             player.Health += HealingAmount;
@@ -71,14 +66,12 @@ namespace DungeonExplorer
     {
         public int AttackBonus { get; private set; }
 
-        // Corrected constructor (ItemType.Weapon)
         public Weapon(string name, string description, int attackBonus, int value)
             : base(name, description, ItemType.Weapon, value)
         {
             AttackBonus = attackBonus;
         }
 
-        // Override Use() to equip weapon and boost attack
         public override void Use(Player player)
         {
             player.Attack += AttackBonus;

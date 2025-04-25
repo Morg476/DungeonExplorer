@@ -26,20 +26,37 @@ namespace DungeonExplorer
             }
         }
 
-        public void ConnectRooms(string room1, string room2)
+        public void ConnectRooms(string roomA, string roomB)
         {
-            if (_rooms.ContainsKey(room1) && _rooms.ContainsKey(room2))
+            if (_rooms.ContainsKey(roomA) && _rooms.ContainsKey(roomB))
             {
-                _connections[room1].Add(room2);
-                _connections[room2].Add(room1);
+                _connections[roomA].Add(roomB);
+                _connections[roomB].Add(roomA);
             }
         }
 
-        public Room GetRoom(string name) => _rooms.ContainsKey(name) ? _rooms[name] : null;
+        public List<string> GetConnectedRooms(string roomName)
+        {
+            return _connections.ContainsKey(roomName) ? _connections[roomName] : new List<string>();
+        }
 
-        public List<string> GetConnectedRooms(string name) =>
-            _connections.ContainsKey(name) ? _connections[name] : new List<string>();
+        public Room GetRoom(string name)
+        {
+            return _rooms.TryGetValue(name, out var room) ? room : null;
+        }
 
-        public IEnumerable<string> RoomNames => _rooms.Keys;
+        public List<Room> GetRoomsWithMonsters()
+        {
+            return _rooms.Values
+                .Where(r => r.Monsters != null && r.Monsters.Any())
+                .ToList();
+        }
+
+        public List<Item> GetAllItemsInDungeon()
+        {
+            return _rooms.Values
+                .SelectMany(r => r.Items)
+                .ToList();
+        }
     }
 }

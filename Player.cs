@@ -44,7 +44,7 @@ public class Player
         Name = name;
         Health = health;
         CurrentRoom = startingRoom;
-        Inventory = new List<Item>();  // Initialize the player's inventory
+        Inventory = new List<Item>();
     }
 
     /// <summary>
@@ -67,7 +67,7 @@ public class Player
         {
             if (Inventory.Count > 0)
             {
-                return string.Join(", ", Inventory.Select(i => i.Name));  // i.Name assumes i is an Item object.
+                return string.Join(", ", Inventory.Select(i => i.Name));
             }
             else
             {

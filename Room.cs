@@ -6,12 +6,11 @@ using System.Linq;
 
 public class Room
 {
-    public string Name { get; set; }  // Name of the room
-    public string Description { get; set; }  // Description of the room
-    public List<Item> Items { get; set; }  // Items in the room
+    public string Name { get; set; }
+    public string Description { get; set; } 
+    public List<Item> Items { get; set; } 
     public List<string> Monsters { get; set; }
 
-    // Constructor
     public Room(string name, string description, List<Item> items, List<string> monsters)
     {
         Name = name;
