@@ -15,54 +15,69 @@ using DungeonExplorer;
 public class Game
 {
     private Player _newPlayer;
-    private Dictionary <string, Room> _rooms;
+    private Dictionary<string, Room> _rooms;
     private Room _currentRoom;
 
     /// <summary>
-    /// Initialises a new instance of the game class.
-    /// Sets up rooms throughout them game, intialises the player and then starts the game
+    /// Initializes a new instance of the game class.
+    /// Sets up rooms throughout the game, initializes the player, and then starts the game.
     /// </summary>
     public Game()
     {
-        Debug.Assert(_rooms == null, "_rooms should be uninitialised before setup.");
-        // Initialise multiple rooms and their attributes
+        Debug.Assert(_rooms == null, "_rooms should be uninitialized before setup.");
+        // Initialize multiple rooms and their attributes
         _rooms = new Dictionary<string, Room>
         {
-            //Dungeon room which containd two items and a monster that can be defeated
+            // Dungeon Entrance with two items and one monster
             { "Dungeon Entrance", new Room(
-
                 "You stand before a massive stone doorway, half-buried in tangled vines and ancient moss. The air is thick with the scent of damp earth and decay. " +
                 "Faint carvings, long eroded by time, whisper of forgotten civilizations and untold dangers. " +
                 "A chilling wind seeps from the dark abyss beyond, carrying distant echoes—whispers, perhaps… or the breathing of something unseen.",
+                new List<Item>
+                {
+                    new Item("Torch", "A basic torch that lights up dark paths", ItemType.Misc, 5),
+                    new Item("Map", "A faded dungeon map with barely legible markings", ItemType.Misc, 3)
+                },
+                new List<string> { "Goblin" })
+            },
 
-                new List<string> { "Torch", "Map" },
-                new List<string> { "Goblin" }) },
-            //Corridor room which contains two items and two monsters that can be defeated
+            // Dark Corridor with two items and two monsters
             { "Dark Corridor", new Room(
                 "The air grows colder as you step into the narrow corridor. The stone walls, slick with moisture, seem to press in around you. " +
                 "Flickering torchlight from the entrance barely reaches this far, leaving most of the passage swallowed in darkness. " +
                 "The faint sound of dripping water echoes through the hall, each drop unsettlingly loud in the eerie silence.\r\n\r\n" +
                 "Somewhere in the distance, a faint scratching noise stirs—something moving, just beyond sight. The floor beneath your feet is uneven, worn down by centuries of footsteps… or something else.",
-                new List<string> { "Potion", "Dagger" },
-                new List<string> { "Skeleton", "Spider" }) },
-            //Chamber room which contains two items and one monster that can be defeated
+                new List<Item>
+                {
+                    new Potion("Potion", "A red healing potion", 50, 10),
+                    new Item("Dagger", "A rusty but sharp dagger", ItemType.Weapon, 8)
+                },
+                new List<string> { "Skeleton", "Spider" })
+            },
+
+            // Treasure Chamber with two items and one monster
             { "Treasure Chamber", new Room(
                 "Gold and jewels glisten in the dim light, spilling from shattered chests and crumbling urns. " +
                 "An ornate pedestal at the far end holds a relic pulsing with energy—its power undeniable.\r\n\r\n" +
                 "But the silence is unnerving. Scattered bones and rusted weapons hint at a deadly past. The air is thick with something unseen… waiting.",
-                new List<string> { "Gold Coin", "Ancient Scroll" },
-                new List<string> { "Dragon" }) }
+                new List<Item>
+                {
+                    new Item("Gold Coin", "A shiny gold coin from a forgotten empire", ItemType.Misc, 2),
+                    new Item("Ancient Scroll", "An old scroll containing forbidden knowledge", ItemType.Misc, 20)
+                },
+                new List<string> { "Dragon" })
+            }
         };
 
-        Debug.Assert(_rooms.Count > 0, "Rooms should be intialised with at least one room.");
+        Debug.Assert(_rooms.Count > 0, "Rooms should be initialized with at least one room.");
 
-        //Sets the starting room of the game as the Dungeon Entrance
+        // Sets the starting room of the game as the Dungeon Entrance
         _currentRoom = _rooms["Dungeon Entrance"];
-        Debug.Assert(_currentRoom != null, "_currentRoom should not be null after intilaisation.");
+        Debug.Assert(_currentRoom != null, "_currentRoom should not be null after initialization.");
 
-        //Initlaises the player, named Hero and sets health within the currentRoom
+        // Initializes the player, named Hero, and sets health within the currentRoom
         _newPlayer = new Player("Hero", 100, _currentRoom);
-        Debug.Assert(_newPlayer != null, "Player should be properly intialised.");
+        Debug.Assert(_newPlayer != null, "Player should be properly initialized.");
 
         Console.WriteLine("\n====================\n" +
             "  DUNGEON EXPLORER        \n" +
@@ -73,6 +88,7 @@ public class Game
             "Will you emerge victorious, your pockets lined with gold and glory? Or will the dungeon claim yet another lost soul?\n");
         Start();
     }
+
     /// <summary>
     /// Displays the main menu options to the player
     /// </summary>
@@ -83,6 +99,7 @@ public class Game
         Console.WriteLine("{ 3 } View Statistics and Inventory");
         Console.WriteLine("{ 4 } Exit Game");
     }
+
     /// <summary>
     /// Displays the statistics menu when that option is chosen
     /// Displays, name, health and inventory contents
@@ -95,6 +112,7 @@ public class Game
         Console.WriteLine($"Inventory: {_newPlayer.InventoryContents}");
         Console.WriteLine($"Health: {_newPlayer.Health}");
     }
+
     /// <summary>
     /// Starts the game loop, allowing the game to flow and the player to progress through the dungeon.
     /// </summary>
@@ -107,16 +125,16 @@ public class Game
             DisplayMenu();
             try
             {
-                //Calls menu and asks user for input on their choice.
+                // Calls menu and asks user for input on their choice.
                 Console.Write("\n::  ");
 
                 if (!int.TryParse(Console.ReadLine(), out int userChoice))
                 {
-                    //Error catching for users choice
+                    // Error catching for users choice
                     Console.WriteLine("Invalid input. Please enter a number.");
                     continue;
                 }
-                //Switch case to control the outcome of the program based on the inputs of the user
+                // Switch case to control the outcome of the program based on the inputs of the user
                 switch (userChoice)
                 {
                     case 1:
@@ -141,11 +159,12 @@ public class Game
             }
             catch (Exception ex)
             {
-                //Prints error if one occurs
+                // Prints error if one occurs
                 Console.WriteLine($"An error has occurred: {ex.Message}");
             }
         }
     }
+
     /// <summary>
     /// Allows the player to explore the current room, search for items and battle enemies
     /// </summary>
@@ -154,27 +173,26 @@ public class Game
         Debug.Assert(_currentRoom != null, "_currentRoom should never be null");
         Console.WriteLine($"Player: {_newPlayer.Name} \nHealth: {_newPlayer.Health}");
         Console.WriteLine($"Inventory: {_newPlayer.InventoryContents}");
-        //Uses GetDescription() to fetch the descriptions of rooms more efficiently for each room entered.
+        // Uses GetDescription() to fetch the descriptions of rooms more efficiently for each room entered.
         Console.WriteLine($"\n{_currentRoom.GetDescription()}");
 
-        //Selection to determine whether the room contains monsters, if so prompt the user with the choice to battle.
+        // Selection to determine whether the room contains monsters, if so prompt the user with the choice to battle.
         if (_currentRoom.HasMonsters())
         {
             Console.WriteLine("\nMonsters lurking here: " + string.Join(", ", _currentRoom.Monsters));
             Console.WriteLine("Do you want to fight? (Y/N)");
             string fightChoice = Console.ReadLine().Trim().ToUpper();
-            //If yes, then call the Fight() method.
+            // If yes, then call the Fight() method.
             if (fightChoice == "Y")
             {
                 Fight();
             }
-
         }
 
-        //Selection to determine if the room has any items in it.
+        // Selection to determine if the room has any items in it.
         if (_currentRoom.HasItems())
         {
-            Console.WriteLine("\nItems you see: " + string.Join(", ", _currentRoom.Items));
+            Console.WriteLine("\nItems you see: " + string.Join(", ", _currentRoom.Items.Select(i => i.Name)));
             Console.WriteLine("Would you like to pick up an item? (Y/N)");
             Console.Write(":: ");
             string itemPickUp = Console.ReadLine().Trim().ToUpper();
@@ -188,15 +206,11 @@ public class Game
 
                 // Find the corresponding Item object based on the item name
                 Item itemToPickUp = null;
-                foreach (string item in _currentRoom.Items)
+                foreach (Item item in _currentRoom.Items)
                 {
-                    // For example, if the item is a Potion, Weapon, etc., find it in the room's list
-                    // You'll need to create the Item objects for each item in the room (e.g., Potion, Weapon, etc.)
-                    if (item == itemName)  // In a real game, you should match by name or a more sophisticated approach
+                    if (item.Name == itemName)  // Correct: comparing Item.Name to itemName (string)
                     {
-                        // Create an example item (replace this with your actual logic for creating items)
-                        // This part assumes that the room contains only strings as item names. You may need to adjust your logic.
-                        itemToPickUp = new Potion(item, "A healing potion", 50, 10);  // Example: create a potion
+                        itemToPickUp = item;
                         break;
                     }
                 }
@@ -213,15 +227,16 @@ public class Game
             }
         }
     }
+
     /// <summary>
     /// Initiates a fight with the first monster within the room the player is in
     /// </summary>
     private void Fight()
     {
-        string monster = _currentRoom.Monsters[0];//Chooses rthe first monster in the room, if more than one present. 
+        string monster = _currentRoom.Monsters[0];  // Chooses the first monster in the room, if more than one present.
         Console.WriteLine($"\nYou fought the {monster}!");
 
-        //Simple fighting mechanic which allows the user to always win (for now), removing 10HP each time.
+        // Simple fighting mechanic which allows the user to always win (for now), removing 10HP each time.
         _newPlayer.Health -= 10;
         _currentRoom.RemoveMonster(monster);
 
@@ -233,18 +248,17 @@ public class Game
     /// </summary>
     private void ChangeRoom()
     {
-        //Prints avauilable rooms
+        // Prints available rooms
         Console.WriteLine("\nAvailable rooms:");
         foreach (var room in _rooms.Keys)
         {
             Console.WriteLine($"- {room}");
         }
 
-        //Asks user to enter the name of the room (little specific but will change later on for ease of error handling)
+        // Asks user to enter the name of the room (a little specific but will change later on for ease of error handling)
         Console.Write("\nEnter the name of the room you want to enter: ");
         string chosenRoom = Console.ReadLine().Trim();
         Debug.Assert(!string.IsNullOrEmpty(chosenRoom), "Room name should not be empty.");
-
 
         if (_rooms.ContainsKey(chosenRoom))
         {

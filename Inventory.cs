@@ -9,46 +9,29 @@ namespace DungeonExplorer
     public class Inventory
     {
         // List of items in the inventory
-        public List<string> Items { get; private set; }
+        public List<Item> Items { get; private set; }
 
         // Constructor initializes the list
         public Inventory()
         {
-            Items = new List<string>();
+            Items = new List<Item>();
         }
 
         // Add item to inventory
-        public void AddItem(string item)
+        public void AddItem(Item item)
         {
-            if (!string.IsNullOrEmpty(item))
-            {
                 Items.Add(item);
-                Console.WriteLine($"{item} added to inventory.");
-            }
-            else
-            {
-                Console.WriteLine("Invalid item name.");
-            }
         }
 
         // Remove item from inventory
-        public bool RemoveItem(string item)
+        public void RemoveItem(Item item)
         {
-            if (Items.Contains(item))
-            {
-                Items.Remove(item);
-                Console.WriteLine($"{item} removed from inventory.");
-                return true;
-            }
-            else
-            {
-                Console.WriteLine($"{item} not found in inventory.");
-                return false;
-            }
+            Items.Remove(item);
+            
         }
 
         // Check if an item is in the inventory
-        public bool HasItem(string item)
+        public bool HasItem(Item item)
         {
             return Items.Contains(item);
         }

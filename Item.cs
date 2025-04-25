@@ -12,7 +12,7 @@ namespace DungeonExplorer
         // Basic properties of an item
         public string Name { get; private set; }      // Name of the item (e.g., "Healing Potion")
         public string Description { get; private set; } // A short description of the item
-        public ItemType Type { get; private set; }     // Type of item (e.g., Potion, Weapon, Key)
+        public ItemType ItemType { get; private set; }     // Type of item (e.g., Potion, Weapon, Key)
         public int Value { get; private set; }          // Value of the item (could be gold, or a stat boost)
 
         // Constructor to create a basic item
@@ -20,7 +20,7 @@ namespace DungeonExplorer
         {
             Name = name;
             Description = description;
-            Type = type;
+            ItemType = type;
             Value = value;
         }
 
@@ -37,6 +37,7 @@ namespace DungeonExplorer
         }
     }
 
+
     // Enum for item types (e.g., weapons, potions, keys)
     public enum ItemType
     {
@@ -52,6 +53,7 @@ namespace DungeonExplorer
     {
         public int HealingAmount { get; private set; }
 
+        // Corrected constructor (ItemType.Potion)
         public Potion(string name, string description, int healingAmount, int value)
             : base(name, description, ItemType.Potion, value)
         {
@@ -66,11 +68,11 @@ namespace DungeonExplorer
         }
     }
 
-    // Example subclass for a Weapon (extends Item class)
     public class Weapon : Item
     {
         public int AttackBonus { get; private set; }
 
+        // Corrected constructor (ItemType.Weapon)
         public Weapon(string name, string description, int attackBonus, int value)
             : base(name, description, ItemType.Weapon, value)
         {
@@ -85,11 +87,11 @@ namespace DungeonExplorer
         }
     }
 
-    // Example subclass for a Key (extends Item class)
     public class Key : Item
     {
         public string KeyForRoom { get; private set; }
 
+        // Corrected constructor (ItemType.Key)
         public Key(string name, string description, string keyForRoom, int value)
             : base(name, description, ItemType.Key, value)
         {
@@ -102,4 +104,5 @@ namespace DungeonExplorer
             Console.WriteLine($"{player.Name} uses {Name} to unlock the {KeyForRoom} room!");
         }
     }
+
 }

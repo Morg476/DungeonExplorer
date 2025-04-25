@@ -51,10 +51,13 @@ public class Room
     /// Removes an item from a room when it has been collected
     /// </summary
     /// <param name="item">The items name to be removed</param>
-    public void RemoveItem(string item)
+    public void RemoveItem(string itemName)
     {
-        Debug.Assert(!string.IsNullOrEmpty(item), "Item name should not be null or empty.");
+        Debug.Assert(!string.IsNullOrEmpty(itemName), "Item name should not be null or empty.");
+
+        var item = Items.Find(i => i.Name == itemName);
         Debug.Assert(Items.Contains(item), $"Item '{item}' does not exist in the room.");
+
         Items.Remove(item);
     }
     /// <summary>
