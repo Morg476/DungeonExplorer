@@ -7,42 +7,27 @@ using System.Threading.Tasks;
 
 namespace DungeonExplorer
 {
-    public class Monster
+
+    public class Monster : Creature
     {
-        public string Name { get; private set; }
-        public int HP { get; private set; }
-        public int Attack { get; private set; }
-        public int Defense { get; private set; }
         public int Experience { get; private set; }
         public string Behaviour { get; private set; }
         public List<string> MobLoot { get; private set; }
 
         public Monster(string name, int hp, int attack, int defense, int experience, string behaviour, List<string> mobloot)
+            : base(name, hp, attack, defense)
         {
-            Name = name;
-            HP = hp;
-            Attack = attack;
-            Defense = defense;
             Experience = experience;
             Behaviour = behaviour;
-            
-            if(MobLoot != null)
-            {
-                MobLoot = mobloot;
-            }
-            else
-            {
-                MobLoot = new List<string>();
-            }
-
+            MobLoot = mobloot ?? new List<string>();
         }
 
         public bool MobAlive()
         {
-            return HP > 0;
+            return IsAlive();
         }
 
-        public int DamageTaken(int damage)
+        public override int DamageTaken(int damage)
         {
             int actualDamage = Math.Max(damage - Defense, 0);
             HP -= actualDamage;
@@ -56,10 +41,19 @@ namespace DungeonExplorer
             player.DamageTaken(damageDealt);
             return damageDealt;
         }
+
+        public override int AttackTarget(Creature target)
+        {
+            int damageDealt = Math.Max(Attack - target.Defense, 0);
+            target.DamageTaken(damageDealt);
+            return damageDealt;
+        }
+
         public List<string> DropLoot()
         {
             return MobLoot;
         }
+
         public override string ToString()
         {
             return $"{Name} (HP: {HP})";

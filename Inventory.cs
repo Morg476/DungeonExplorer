@@ -36,7 +36,7 @@ namespace DungeonExplorer
             if (Items.Count == 0)
             {
                 Console.WriteLine("Your inventory is empty.");
-            }
+            } 
             else
             {
                 Console.WriteLine("Inventory:");
