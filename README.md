@@ -1,3 +1,0 @@
-# DungeonExplorer
-
-## Introduction
